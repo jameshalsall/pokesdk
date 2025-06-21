@@ -151,7 +151,7 @@ if err != nil {
 }
 ```
 
-#### Generation Not Found
+##### Generation Not Found
 ```go
 _, err := client.Generation.GetByID(context.Background(), 999)
 if err != nil {

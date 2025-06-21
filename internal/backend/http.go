@@ -80,7 +80,9 @@ func (h HTTP) closeResponseBody(resp *http.Response) {
 	}
 
 	if err := resp.Body.Close(); err != nil {
-		// ideally we would log the error, but the SDK does not support loggers yet...
+		// we should log the error (using a user-provided logger), but the SDK does not support this yet so
+		// just spit it out for demonstration purposes...
+		fmt.Printf("pokesdk/backend: error closing HTTP response body: %s\n", err)
 	}
 }
 
