@@ -180,5 +180,5 @@ You can see example usage of the SDK in [`cmd/example/main.go`](/cmd/example/mai
 2. I modelled the paginator as a generic type that can be used for any resource, allowing for code reuse and consistency across different resources. In the future adding new endpoints will be easier.
 3. For integration tests I considered using something like WireMock and [test containers](https://golang.testcontainers.org) to spin it up as part of the test suite, but I decided to use a test HTTP server with simple stub responses instead. The main reason was to keep the test suite simple with as few external dependencies as possible.
 4. Due to time constraints I haven't added exhausting test assertions on every struct field's value.
-5. Configuration is done using functional options, a common idiom. This could be extended with other options but I've kept it simple for now.
-6. One of the configuration options I'd have liked adde was a custom logger. You may notice in `internal/backend/http.go` that when the response body is closed I don't do anything with the error - this is where accepting a custom logger from the user would be useful.
+5. Configuration is done using functional options, a common idiom. This could be extended with other options, but I've kept it simple for now.
+6. One of the configuration options I'd have liked to add was a custom logger. You may notice in `internal/backend/http.go` that when the response body is closed I don't do anything with the error - this is where accepting a custom logger from the user would be useful.
