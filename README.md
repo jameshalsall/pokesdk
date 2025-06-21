@@ -127,6 +127,7 @@ ref := pokesdk.PokemonRef{
     URL:  "https://pokeapi.co/api/v2/pokemon/25/",
 }
 pokemon, err := client.Pokemon.GetByRef(context.Background(), ref)
+```
 
 ## Getting generation data
 
@@ -149,6 +150,7 @@ if err != nil {
 	os.Exit(1)
 }
 ```
+
 #### Generation Not Found
 ```go
 _, err := client.Generation.GetByID(context.Background(), 999)
