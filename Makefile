@@ -1,4 +1,4 @@
-test-all: test integration-test
+test-all: test test-integration
 
 test:
 	go test -race ./...
