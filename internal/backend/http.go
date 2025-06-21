@@ -3,6 +3,7 @@ package backend
 import (
 	"context"
 	"fmt"
+	"net"
 	"net/http"
 	"time"
 
@@ -10,8 +11,11 @@ import (
 )
 
 const (
-	defaultMaxIdleConns = 100
-	defaultTimeout      = 10 * time.Second
+	defaultMaxIdleConns        = 100
+	defaultTimeout             = 10 * time.Second
+	defaultDialTimeout         = 5 * time.Second
+	defaultKeepAlive           = 30 * time.Second
+	defaultTLSHandshakeTimeout = 5 * time.Second
 )
 
 type HTTPClient interface {
@@ -87,11 +91,16 @@ func (h HTTP) closeResponseBody(resp *http.Response) {
 }
 
 func defaultHTTPClient() HTTPClient {
-	// todo: which defaults?
 	return &http.Client{
 		Timeout: defaultTimeout,
 		Transport: &http.Transport{
-			MaxIdleConns: defaultMaxIdleConns,
+			DialContext: (&net.Dialer{
+				Timeout:   defaultDialTimeout,
+				KeepAlive: defaultKeepAlive,
+			}).DialContext,
+			TLSHandshakeTimeout: defaultTLSHandshakeTimeout,
+			MaxIdleConns:        defaultMaxIdleConns,
+			MaxIdleConnsPerHost: defaultMaxIdleConns,
 		},
 	}
 }
