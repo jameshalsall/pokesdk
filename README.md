@@ -47,8 +47,8 @@ The client can be configured with various functional options.
 myClient := &http.Client{}
 
 client := pokesdk.NewClient(
-    pokesdk.WithCustomHttpClient(myClient),
-    pokesdk.WithCustomBaseURL("https://custom.pokeapi.co/api/v2/"),
+	pokesdk.WithCustomHttpClient(myClient),
+	pokesdk.WithCustomBaseURL("https://custom.pokeapi.co/api/v2/"),
 )
 ```
 
@@ -59,21 +59,28 @@ client := pokesdk.NewClient(
 client := pokesdk.NewClient()
 
 // Fetch first page of Pokémon (use a better context in production code)
-pokemonList := client.Pokemon.List().Next(context.Background())
-if pokemonList.Error != nil {
-    fmt.Printf("Error fetching Pokémon list: %v", err)
-    os.Exit(1)
+pokemonList := client.Pokemon.List()
+firstPage := pokemonList.Next(context.Background())
+if firstPage.Error != nil {
+	fmt.Printf("Error fetching Pokémon list: %v", err)
+	os.Exit(1)
 }
 
 for _, pokemon := range pokemonList.Results {
-    slog.Info("Pokémon: %s", pokemon.Name)
+	slog.Info("Pokémon: %s", pokemon.Name)
+	// you can get more information on the pokemon by fetching it by ref
+	detailedPokemon, err := client.Pokemon.GetByRef(context.Background(), pokemon)
+	if err != nil {
+		fmt.Printf("Error fetching Pokémon details: %v", err)
+		continue
+	}
 }
 
 // fetch the next page of Pokémon
 pokemonList = pokemonList.Next(context.Background())
 if pokemonList == nil {
-    fmt.Println("No more Pokémon to fetch")
-    return
+	fmt.Println("No more Pokémon to fetch")
+	return
 }
 ```
 
@@ -85,19 +92,19 @@ client := pokesdk.NewClient()
 pages := client.Pokemon.List().All(context.Background())
 
 for page := range pages {
-    if page.Error != nil {
-        fmt.Printf("Error fetching Pokémon list: %v", page.Error)
-        os.Exit(1)
-    }
-    for _, pokemon := range page.Results {
-        slog.Info("Pokémon: %s", pokemon.Name
-        // you can get more information on the pokemon by fetching it by ref
-        detailedPokemon, err := client.Pokemon.GetByRef(context.Background(), pokemon)
-        if err != nil {
-            fmt.Printf("Error fetching Pokémon details: %v", err)
-            continue
-        }
-    }
+	if page.Error != nil {
+		fmt.Printf("Error fetching Pokémon list: %v", page.Error)
+		os.Exit(1)
+	}
+	for _, pokemon := range page.Results {
+		slog.Info("Pokémon: %s", pokemon.Name
+		// you can get more information on the pokemon by fetching it by ref
+		detailedPokemon, err := client.Pokemon.GetByRef(context.Background(), pokemon)
+		if err != nil {
+			fmt.Printf("Error fetching Pokémon details: %v", err)
+			continue
+		}
+	}
 }
 ```
 
@@ -110,6 +117,16 @@ pokemon, err := client.Pokemon.GetByID(context.Background(), 25)
 ```go
 pokemon, err := client.Pokemon.GetByName(context.Background(), "pikachu")
 ```
+### Fetching Pokémon by Reference
+
+>_NOTE: A reference is returned in the listing response, and isn't constructed by the user._
+
+```go
+ref := pokesdk.PokemonRef{
+    Name: "pikachu",
+    URL:  "https://pokeapi.co/api/v2/pokemon/25/",
+}
+pokemon, err := client.Pokemon.GetByRef(context.Background(), ref)
 
 ## Getting generation data
 
@@ -124,24 +141,24 @@ If a resource is not found you can check for relevant not found error.
 ```go
 _, err := client.Pokemon.GetByName(context.Background(), "nonexistent")
 if err != nil {
-    if errors.Is(err, pokesdk.PokemonNotFoundError) {
-        fmt.Println("Pokémon not found")
-    } else {
-        fmt.Printf("Error fetching Pokémon: %v", err)
-    }
-    os.Exit(1)
+	if errors.Is(err, pokesdk.PokemonNotFoundError) {
+		fmt.Println("Pokémon not found")
+	} else {
+		fmt.Printf("Error fetching Pokémon: %v", err)
+	}
+	os.Exit(1)
 }
 ```
 #### Generation Not Found
 ```go
 _, err := client.Generation.GetByID(context.Background(), 999)
 if err != nil {
-    if errors.Is(err, pokesdk.GenerationNotFoundError) {
-        fmt.Println("Generation not found")
-    } else {
-        fmt.Printf("Error fetching generation: %v", err)
-    }
-    os.Exit(1)
+	if errors.Is(err, pokesdk.GenerationNotFoundError) {
+		fmt.Println("Generation not found")
+	} else {
+		fmt.Printf("Error fetching generation: %v", err)
+	}
+	os.Exit(1)
 }
 ```
 
