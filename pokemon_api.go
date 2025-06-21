@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"github.com/jameshalsall/pokesdk/internal/backend"
-	oururl "github.com/jameshalsall/pokesdk/internal/url"
+	"github.com/jameshalsall/pokesdk/internal/urlutil"
 )
 
 const (
@@ -63,5 +63,5 @@ func (g PokemonAPI) getPokemon(ctx context.Context, url string) (*Pokemon, error
 }
 
 func (g PokemonAPI) url(path string) string {
-	return oururl.BuildURL(g.cfg.baseURL, path)
+	return urlutil.BuildURL(g.cfg.baseURL, path)
 }

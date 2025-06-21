@@ -28,7 +28,7 @@ func main() {
 
 	pikachu, err := client.Pokemon.GetByName(context.Background(), "pikachu")
 	if err != nil {
-		fmt.Printf("Error fetching Pokémon: %v", err)
+		fmt.Printf("Error fetching Pokémon: %w", err)
 		os.Exit(1)
 	}
 
@@ -93,7 +93,7 @@ pages := client.Pokemon.List().All(context.Background())
 
 for page := range pages {
 	if page.Error != nil {
-		fmt.Printf("Error fetching Pokémon list: %v", page.Error)
+		fmt.Printf("Error fetching Pokémon list: %w", page.Error)
 		os.Exit(1)
 	}
 	for _, pokemon := range page.Results {
@@ -101,7 +101,7 @@ for page := range pages {
 		// you can get more information on the pokemon by fetching it by ref
 		detailedPokemon, err := client.Pokemon.GetByRef(context.Background(), pokemon)
 		if err != nil {
-			fmt.Printf("Error fetching Pokémon details: %v", err)
+			fmt.Printf("Error fetching Pokémon details: %w", err)
 			continue
 		}
 	}
@@ -145,7 +145,7 @@ if err != nil {
 	if errors.Is(err, pokesdk.PokemonNotFoundError) {
 		fmt.Println("Pokémon not found")
 	} else {
-		fmt.Printf("Error fetching Pokémon: %v", err)
+		fmt.Printf("Error fetching Pokémon: %w", err)
 	}
 	os.Exit(1)
 }
@@ -158,7 +158,7 @@ if err != nil {
 	if errors.Is(err, pokesdk.GenerationNotFoundError) {
 		fmt.Println("Generation not found")
 	} else {
-		fmt.Printf("Error fetching generation: %v", err)
+		fmt.Printf("Error fetching generation: %w", err)
 	}
 	os.Exit(1)
 }
@@ -179,4 +179,6 @@ You can see example usage of the SDK in [`cmd/example/main.go`](/cmd/example/mai
 1. I wanted to provide the ability for users to easily iterate through paginated results without having to manually handle pagination logic. The paginator allows users to decide whether they want to handle the concurrency themselves (using `Next()` method) or have the SDK handle it for them (using the `All()` method that returns a channel). I am concious of the fact that forcing concurrency on users is not ideal, and should be left up to the user to decide. I think this strikes a good balance.
 2. I modelled the paginator as a generic type that can be used for any resource, allowing for code reuse and consistency across different resources. In the future adding new endpoints will be easier.
 3. For integration tests I considered using something like WireMock and [test containers](https://golang.testcontainers.org) to spin it up as part of the test suite, but I decided to use a test HTTP server with simple stub responses instead. The main reason was to keep the test suite simple with as few external dependencies as possible.
-4. Because of time constraints I haven't exhaustively tested every struct field gets populated from the API correctly in the integration test, I have just verified that ID and name fields are populated correctly.
+4. Due to time constraints I haven't added exhausting test assertions on every struct field's value.
+5. Configuration is done using functional options, a common idiom. This could be extended with other options but I've kept it simple for now.
+6. One of the configuration options I'd have liked adde was a custom logger. You may notice in `internal/backend/http.go` that when the response body is closed I don't do anything with the error - this is where accepting a custom logger from the user would be useful.

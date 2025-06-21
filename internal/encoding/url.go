@@ -2,7 +2,6 @@ package encoding
 
 import "net/url"
 
-// todo: test
 func EncodeQueryParams(params map[string]string) (string, bool) {
 	if len(params) == 0 || params == nil {
 		return "", false

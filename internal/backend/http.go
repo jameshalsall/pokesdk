@@ -34,7 +34,11 @@ func NewHTTP(client HTTPClient) *HTTP {
 	}
 }
 
+// Process sends an HTTP request with the given method and path, marshals params (if present),
+// and decodes the response into out (which must be a pointer).
+// If a non-pointer is passed as out, an error will be returned.
 func (h HTTP) Process(ctx context.Context, url string, params map[string]string, out any) error {
+
 	if params != nil {
 		query, ok := encoding.EncodeQueryParams(params)
 		if ok {
@@ -76,7 +80,7 @@ func (h HTTP) closeResponseBody(resp *http.Response) {
 	}
 
 	if err := resp.Body.Close(); err != nil {
-		fmt.Printf("pokesdk/backend: error closing HTTP response body: %v\n", err)
+		// ideally we would log the error, but the SDK does not support loggers yet...
 	}
 }
 

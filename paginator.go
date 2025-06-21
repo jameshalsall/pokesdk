@@ -6,7 +6,7 @@ import (
 )
 
 // PageableResource is an interface that defines a resource that can be paginated.
-// NOTE: In the future this could be expanded to include going backwards as well as forwards.
+// NOTE: In the future this could be expanded to support retrieving the previous page as well.
 type PageableResource interface {
 	GetNextURL() string
 }
