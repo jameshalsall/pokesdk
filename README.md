@@ -62,24 +62,24 @@ client := pokesdk.NewClient()
 pokemonList := client.Pokemon.List()
 firstPage := pokemonList.Next(context.Background())
 if firstPage.Error != nil {
-	fmt.Printf("Error fetching Pokémon list: %v", err)
+    slog.Error("Error fetching Pokémon list", "error", firstPage.Error)
 	os.Exit(1)
 }
 
-for _, pokemon := range pokemonList.Results {
-	slog.Info("Pokémon: %s", pokemon.Name)
+for _, pokemon := range firstPage.Result.Results {
+    slog.Info("Pokémon found", "name", pokemon.Name)
 	// you can get more information on the pokemon by fetching it by ref
 	detailedPokemon, err := client.Pokemon.GetByRef(context.Background(), pokemon)
 	if err != nil {
-		fmt.Printf("Error fetching Pokémon details: %v", err)
+        slog.Error("Error fetching Pokémon details", "error", err)
 		continue
 	}
 }
 
 // fetch the next page of Pokémon
-pokemonList = pokemonList.Next(context.Background())
-if pokemonList == nil {
-	fmt.Println("No more Pokémon to fetch")
+secondPage := pokemonList.Next(context.Background())
+if secondPage == nil {
+    slog.Info("no more Pokémon")
 	return
 }
 ```
@@ -167,6 +167,10 @@ if err != nil {
 You can use `make test-all` to run all tests, including unit and integration tests.
 
 To run only unit tests, use `make test`, and to run only integration tests, use `make test-integration`.
+
+## Example usage
+
+You can see example usage of the SDK in [`cmd/example/main.go`](/cmd/example/main.go).
 
 ## Design decisions
 
