@@ -1,0 +1,7 @@
+version: "2"
+linters:
+  enable:
+    - bodyclose
+  disable:
+    # seems odd to disable this but it was flagging false positives in my integration test files and this
+    - unused

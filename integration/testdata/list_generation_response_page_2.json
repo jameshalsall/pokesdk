@@ -1,0 +1,11 @@
+{
+  "count": 1,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "name": "generation-ii",
+      "url": "https://pokeapi.co/api/v2/generation/2/"
+    }
+  ]
+}

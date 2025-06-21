@@ -1,0 +1,11 @@
+{
+  "count": 1,
+  "next": "{{.BaseURL}}/generation?offset=20&limit=20",
+  "previous": null,
+  "results": [
+    {
+      "name": "generation-i",
+      "url": "https://pokeapi.co/api/v2/generation/1/"
+    }
+  ]
+}

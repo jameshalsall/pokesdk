@@ -1,0 +1,11 @@
+{
+  "count": 1,
+  "next": null,
+  "previous": "{{.BaseURL}}/pokemon",
+  "results": [
+    {
+      "name": "ivysaur",
+      "url": "https://pokeapi.co/api/v2/pokemon/2/"
+    }
+  ]
+}
