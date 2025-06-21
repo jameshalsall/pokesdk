@@ -34,17 +34,17 @@ func TestGenerationAPIList(t *testing.T) {
 
 		firstPage := pages.Next(ctx)
 		require.NotNil(t, firstPage)
-		require.Len(t, firstPage.Result.Results, 1)
-		assert.Equal(t, "generation-i", firstPage.Result.Results[0].Name)
-		assert.Equal(t, "https://pokeapi.co/api/v2/generation/1/", firstPage.Result.Results[0].URL)
-		assert.Equal(t, 1, firstPage.Result.Count)
+		require.Len(t, firstPage.Data.Results, 1)
+		assert.Equal(t, "generation-i", firstPage.Data.Results[0].Name)
+		assert.Equal(t, "https://pokeapi.co/api/v2/generation/1/", firstPage.Data.Results[0].URL)
+		assert.Equal(t, 1, firstPage.Data.Count)
 
 		secondPage := pages.Next(ctx)
 		require.NotNil(t, secondPage)
-		require.Len(t, secondPage.Result.Results, 1)
-		assert.Equal(t, "generation-ii", secondPage.Result.Results[0].Name)
-		assert.Equal(t, "https://pokeapi.co/api/v2/generation/2/", secondPage.Result.Results[0].URL)
-		assert.Equal(t, 1, secondPage.Result.Count)
+		require.Len(t, secondPage.Data.Results, 1)
+		assert.Equal(t, "generation-ii", secondPage.Data.Results[0].Name)
+		assert.Equal(t, "https://pokeapi.co/api/v2/generation/2/", secondPage.Data.Results[0].URL)
+		assert.Equal(t, 1, secondPage.Data.Count)
 
 		assert.Nil(t, pages.Next(ctx))
 
@@ -66,15 +66,15 @@ func TestGenerationAPIList(t *testing.T) {
 		for page := range pages.All(ctx) {
 			pageCount++
 			require.NotNil(t, page)
-			require.Len(t, page.Result.Results, 1)
+			require.Len(t, page.Data.Results, 1)
 
 			switch pageCount {
 			case 1:
-				assert.Equal(t, "generation-i", page.Result.Results[0].Name)
-				assert.Equal(t, "https://pokeapi.co/api/v2/generation/1/", page.Result.Results[0].URL)
+				assert.Equal(t, "generation-i", page.Data.Results[0].Name)
+				assert.Equal(t, "https://pokeapi.co/api/v2/generation/1/", page.Data.Results[0].URL)
 			case 2:
-				assert.Equal(t, "generation-ii", page.Result.Results[0].Name)
-				assert.Equal(t, "https://pokeapi.co/api/v2/generation/2/", page.Result.Results[0].URL)
+				assert.Equal(t, "generation-ii", page.Data.Results[0].Name)
+				assert.Equal(t, "https://pokeapi.co/api/v2/generation/2/", page.Data.Results[0].URL)
 			default:
 				t.Fatalf("unexpected page count: %d", pageCount)
 			}

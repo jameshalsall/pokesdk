@@ -20,11 +20,11 @@ type Paginator[T PageableResource] struct {
 	done  bool
 }
 
-// Page represents a single page of results from a paginated resource.
-// It contains the result of type T and an error if one occurred during fetching.
+// Page represents a single page of data from a paginated resource.
+// It contains the data of type T and an error if one occurred during fetching.
 type Page[T PageableResource] struct {
-	Result T
-	Error  error
+	Data  T
+	Error error
 }
 
 // NewPaginator creates a new Paginator instance for the given type.
@@ -79,5 +79,5 @@ func (p *Paginator[T]) Next(ctx context.Context) *Page[T] {
 	next := page.GetNextURL()
 	p.next = next
 
-	return &Page[T]{Result: page}
+	return &Page[T]{Data: page}
 }

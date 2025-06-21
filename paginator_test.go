@@ -32,7 +32,7 @@ func TestPaginator_Next(t *testing.T) {
 		page := p.Next(context.Background())
 		require.NoError(t, page.Error)
 		assert.NotNil(t, page)
-		assert.Equal(t, 1, page.Result.id)
+		assert.Equal(t, 1, page.Data.id)
 
 		page = p.Next(context.Background())
 		assert.Nil(t, page)
@@ -81,7 +81,7 @@ func TestPaginator_All(t *testing.T) {
 		var results []*mockPage
 		for page := range ch {
 			assert.NoError(t, page.Error)
-			results = append(results, page.Result)
+			results = append(results, page.Data)
 		}
 
 		assert.Len(t, results, 3)

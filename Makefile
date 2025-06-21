@@ -3,7 +3,7 @@ test-all: test integration-test
 test:
 	go test -race ./...
 
-integration-test:
+test-integration:
 	go test --tags=integration ./integration/
 
 fmt:

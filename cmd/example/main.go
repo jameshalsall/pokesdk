@@ -21,7 +21,7 @@ func main() {
 	}
 
 	var lastRef pokesdk.PokemonRef
-	for _, pokemon := range firstPage.Result.Results {
+	for _, pokemon := range firstPage.Data.Results {
 		slog.Info("Pokémon found", "name", pokemon.Name)
 		lastRef = pokemon
 	}
@@ -40,7 +40,7 @@ func main() {
 		return
 	}
 
-	for _, pokemon := range secondPage.Result.Results {
+	for _, pokemon := range secondPage.Data.Results {
 		slog.Info("Pokémon found", "name", pokemon.Name)
 	}
 }

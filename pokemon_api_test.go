@@ -26,9 +26,9 @@ func TestPokemonAPI_List(t *testing.T) {
 		firstPage := pages.Next(ctx)
 		require.NotNil(t, firstPage)
 		require.NoError(t, firstPage.Error)
-		require.Len(t, firstPage.Result.Results, 1)
-		assert.Equal(t, "bulbasaur", firstPage.Result.Results[0].Name)
-		assert.Equal(t, "https://pokeapi.co/api/v2/pokemon/1/", firstPage.Result.Results[0].URL)
+		require.Len(t, firstPage.Data.Results, 1)
+		assert.Equal(t, "bulbasaur", firstPage.Data.Results[0].Name)
+		assert.Equal(t, "https://pokeapi.co/api/v2/pokemon/1/", firstPage.Data.Results[0].URL)
 	})
 
 	t.Run("it should return an error on the page if listing fails", func(t *testing.T) {
